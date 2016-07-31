@@ -31,7 +31,7 @@ def opposite_xor(a, b):
     x = xor(a, b)
     return 0 if x == 1 else 1
 
-def get_stuff(l, r, paid):
+def get_status(l, r, paid):
     if l["position"] == paid:
         return opposite_xor(l["secret"], r["secret"])
     return xor(l["secret"], r["secret"])
@@ -43,7 +43,7 @@ def announce(cryptographers, paid):
     results = []
     for i in cryptographers:
         _next = cryptographers[i["next"]]
-        results.append(get_stuff(i, _next, paid))
+        results.append(get_status(i, _next, paid))
     return results
 
 def get_final_status(results):
