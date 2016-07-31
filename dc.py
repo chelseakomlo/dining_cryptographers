@@ -11,14 +11,14 @@ def gen_random():
     return randint(0, 1)
 
 def gen_edge(left, right):
-    return {"left": left, "right": right, "secret": gen_random()}
+    return {"position": left, "next": right, "secret": gen_random()}
 
 def create_cryptographers_graph(edges, n):
-    edges.append(gen_edge(n, n-1))
-    return _create_cryptographers_graph(edges, n-1, n)
+    edges.append(gen_edge(n-1, n-2)) # easier if everything is zero-indexed
+    return _create_cryptographers_graph(edges, n-2, n-1)
 
 def _create_cryptographers_graph(edges, counter, final):
-    if counter == 1:
+    if counter == 0:
         edges.append(gen_edge(counter, final))
         return edges
     edges.append(gen_edge(counter, counter-1))
@@ -31,14 +31,19 @@ def opposite_xor(a, b):
     x = xor(a, b)
     return 0 if x == 1 else 1
 
+def get_stuff(l, r, paid):
+    if l["position"] == paid:
+        return opposite_xor(l["secret"], r["secret"])
+    return xor(l["secret"], r["secret"])
+
 # if the cryptographer didn't pay for the meal, they will announce the XOR of
 # the two shared bits they hold with their two neighbors
 # if they did pay, they announce the opposite of that XOR
 def announce(cryptographers, paid):
     results = []
     for i in cryptographers:
-        if i["left"] == paid: results.append(opposite_xor(i["left"], i["right"]))
-        results.append(xor(i["left"], i["right"]))
+        _next = cryptographers[i["next"]]
+        results.append(get_stuff(i, _next, paid))
     return results
 
 def get_final_status(results):
