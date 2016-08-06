@@ -48,7 +48,8 @@ def announce(cryptographers, paid):
         final = xor(final, announcement)
     return final
 
-cryptographers = create_cryptographers_graph(5)
+number_of_cryptographers = 5
+cryptographers = create_cryptographers_graph(number_of_cryptographers)
 
 paying_cryptographer_position = 2
 result = announce(cryptographers, paying_cryptographer_position)
